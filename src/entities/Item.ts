@@ -1,7 +1,7 @@
 import { prop, getModelForClass } from '@typegoose/typegoose'
 
 export default class Item {
-  @prop()
+  @prop({ unique: true })
   key: string
 
   @prop()
