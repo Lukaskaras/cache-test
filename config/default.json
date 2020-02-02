@@ -1,0 +1,6 @@
+{
+  "port": 6000,
+  "mongo": {
+    "dbName": "cache-db"
+  }
+}

@@ -1,0 +1,6 @@
+--bail
+--require source-map-support/register
+--require ts-node/register
+--recursive test/*.ts test/**/*.ts test/**/**/*.ts
+--globals express,__coverage__,__core*,regeneratorRuntime,lr
+-t 15000
