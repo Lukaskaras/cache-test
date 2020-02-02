@@ -1,5 +1,6 @@
 import axios from 'axios'
 import config from 'config'
+import moment from 'moment'
 import Item, { ItemModel } from '../src/entities/Item'
 
 export const url = `http://localhost:${config.get('port')}`
@@ -48,4 +49,12 @@ export const deleteKey = async (key: string): Promise<void> => {
 
 export const deleteAll = async (): Promise<void> => {
   await axios.delete(`${url}/items`)
+}
+
+export const createExpiredUser = async (key: string, value: string): Promise<void> => {
+  await ItemModel.create({
+    key,
+    value,
+    expiresAt: moment().subtract(5, 'seconds').toDate()
+  })
 }

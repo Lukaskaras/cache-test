@@ -1,6 +1,6 @@
 import * as assert from 'assert'
 import { ItemModel } from '../../src/entities/Item'
-import { deleteAll, deleteKey, getAllKeys, getKey, postKey, resetDatabase } from '../utils'
+import { createExpiredUser, deleteAll, deleteKey, getAllKeys, getKey, postKey, resetDatabase } from '../utils'
 
 describe('Integration tests', async () => {
   beforeEach(async () => {
@@ -38,6 +38,20 @@ describe('Integration tests', async () => {
       assert.strictEqual(allKeys.length, 2)
       assert.ok([ 'User', 'Key' ].includes(allKeys[0].key))
       assert.ok([ 'User', 'Key' ].includes(allKeys[1].key))
+    })
+
+    it.only('should return all items except expired', async () => {
+      await Promise.all([
+        postKey('User', 'John'),
+        createExpiredUser('Key', 'Value')
+      ])
+
+      const allItems = await ItemModel.find({}).exec()
+      assert.strictEqual(allItems.length, 2)
+
+      const allItemsWithoutExpired = await getAllKeys()
+      assert.strictEqual(allItemsWithoutExpired.length, 1)
+      assert.strictEqual(allItemsWithoutExpired[0].value, 'John')
     })
   })
 

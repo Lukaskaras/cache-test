@@ -31,7 +31,7 @@ export const postItem = async (req: Request, res: Response) => {
 }
 
 export const getAllItems = async (req: Request, res: Response): Promise<void> => {
-  const items = await ItemModel.find({}).exec()
+  const items = await ItemModel.find({ expiresAt: { $gte: new Date() }}).exec()
   res.send(items)
 }
 
