@@ -2,5 +2,6 @@
   "port": 6001,
   "mongo": {
     "dbName": "cache-db-test"
-  }
+  },
+  "maxItems": 2
 }

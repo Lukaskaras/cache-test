@@ -22,6 +22,7 @@ const start = async () => {
   await mongoose.connect(`mongodb://${connection}localhost:27017/`, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
+    useFindAndModify: false,
     dbName: config.get('mongo.dbName')
   })
 

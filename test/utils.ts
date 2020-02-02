@@ -51,7 +51,7 @@ export const deleteAll = async (): Promise<void> => {
   await axios.delete(`${url}/items`)
 }
 
-export const createExpiredUser = async (key: string, value: string): Promise<void> => {
+export const createExpiredItem = async (key: string, value: string): Promise<void> => {
   await ItemModel.create({
     key,
     value,
