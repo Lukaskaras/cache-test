@@ -3,5 +3,6 @@
   "mongo": {
     "dbName": "cache-db"
   },
-  "defaultTtl": 900
+  "defaultTtl": 900,
+  "maxItems": 5
 }

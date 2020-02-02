@@ -69,3 +69,8 @@ export const deleteItem = async (req: Request, res: Response) => {
 
   res.sendStatus(200)
 }
+
+export const deleteAllItems = async (req: Request, res: Response) => {
+  await ItemModel.deleteMany({}).exec()
+  res.sendStatus(200)
+}

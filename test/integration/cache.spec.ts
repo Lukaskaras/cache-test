@@ -1,6 +1,6 @@
 import * as assert from 'assert'
 import { ItemModel } from '../../src/entities/Item'
-import { deleteKey, getAllKeys, getKey, postKey, resetDatabase } from '../utils'
+import { deleteAll, deleteKey, getAllKeys, getKey, postKey, resetDatabase } from '../utils'
 
 describe('Integration tests', async () => {
   beforeEach(async () => {
@@ -68,6 +68,17 @@ describe('Integration tests', async () => {
       const allItems = await ItemModel.find({}).exec()
       assert.strictEqual(allItems.length, 1)
       assert.strictEqual(allItems[0].key, 'Key')
+    })
+  })
+
+  describe('DELETE /items', async () => {
+    it('should delete all items', async () => {
+      await postKey('User', 'John')
+      await postKey('Key', 'Value')
+      await deleteAll()
+
+      const allItems = await ItemModel.find({}).exec()
+      assert.strictEqual(allItems.length, 0)
     })
   })
 })

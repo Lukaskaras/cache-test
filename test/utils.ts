@@ -45,3 +45,7 @@ export const deleteKey = async (key: string): Promise<void> => {
     }
   })
 }
+
+export const deleteAll = async (): Promise<void> => {
+  await axios.delete(`${url}/items`)
+}
