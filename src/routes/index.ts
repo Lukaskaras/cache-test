@@ -1,5 +1,5 @@
 import express from 'express'
-import { getAllItems, getItem, postItem } from '../controllers/ItemController'
+import { deleteItem, getAllItems, getItem, postItem } from '../controllers/ItemController'
 const router = express.Router()
 
 router.get('/test', async (req, res) => {
@@ -9,6 +9,7 @@ router.get('/test', async (req, res) => {
 
 router.get('/item', getItem)
 router.post('/item', postItem)
+router.delete('/item', deleteItem)
 router.get('/items', getAllItems)
 
 export default router

@@ -35,3 +35,13 @@ export const getKey = async (key: string): Promise<Item> => {
   })
   return result.data
 }
+
+export const deleteKey = async (key: string): Promise<void> => {
+  await axios.request({
+    method: 'DELETE',
+    url: `${url}/item`,
+    params: {
+      key
+    }
+  })
+}

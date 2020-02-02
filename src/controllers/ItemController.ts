@@ -2,7 +2,7 @@ import { Request, Response } from 'express'
 import generate from 'nanoid/generate'
 import config from 'config'
 import moment from 'moment'
-import { ItemModel } from '../entities/Item'
+import Item, { ItemModel } from '../entities/Item'
 import mongoErrorCodes from '../mongoErrorCodes'
 
 const defaultTtl = config.get('defaultTtl')
@@ -47,7 +47,7 @@ export const getItem = async (req: Request, res: Response): Promise<void> => {
 
   console.log('Cache miss')
   const randomString = generate('1234567890abcdefghijklmnopqrstuvwxyz', 12)
-  const newItem = {
+  const newItem: Item = {
     key,
     value: randomString,
     expiresAt: moment().add(defaultTtl, 'seconds').toDate()
@@ -55,4 +55,17 @@ export const getItem = async (req: Request, res: Response): Promise<void> => {
   res.send(newItem)
 
   await ItemModel.create(newItem)
+}
+
+export const deleteItem = async (req: Request, res: Response) => {
+  const { key } = req.query
+
+  const result = await ItemModel.deleteOne({ key }).exec()
+
+  if (!result.deletedCount) {
+    res.sendStatus(404)
+    return
+  }
+
+  res.sendStatus(200)
 }
