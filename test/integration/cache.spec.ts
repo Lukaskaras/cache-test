@@ -37,6 +37,11 @@ describe('Integration tests', async () => {
       assert.ok([ 'test-key1', 'test-key2' ].includes(allItems[0].key))
       assert.ok([ 'test-key1', 'test-key2' ].includes(allItems[1].key))
     })
+
+    it('should respond with 400 if key is missing', async () => {
+      const request = postKey('', 'John')
+      await assert.rejects(request, new Error('Request failed with status code 400'))
+    })
   })
 
   describe('GET /items', async () => {

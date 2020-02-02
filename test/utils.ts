@@ -10,7 +10,7 @@ export const resetDatabase = async () => {
 }
 
 export const postKey = async (key: string, value: string, ttl: number = 900) => {
-  await axios.request({
+  return axios.request({
     method: 'POST',
     url: `${url}/item`,
     data: {
