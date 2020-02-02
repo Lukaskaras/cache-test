@@ -61,6 +61,7 @@ export default class ItemController {
 
     let updatedItem: Item
     if (!item) {
+      console.log('Cache miss')
       await this.createItem(key, randomString, expiresAt)
       updatedItem = {
         key,
@@ -71,13 +72,13 @@ export default class ItemController {
 
     if (item) {
       if (new Date(item.expiresAt).getTime() < now.getTime()) {
+        console.log('Cache miss')
         console.log('item is expired')
         updatedItem = {
           key,
           value: randomString,
           expiresAt
         }
-        res.send(updatedItem)
         await ItemModel.updateOne({ key }, updatedItem)
       } else {
         console.log('Cache hit')
