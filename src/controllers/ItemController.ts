@@ -17,6 +17,14 @@ export default class ItemController {
   public async postItem (req: Request, res: Response) {
     const { key, value, ttl } = req.body
 
+    if (!key) {
+      res.status(400).send('Key is missing')
+    }
+
+    if (!value) {
+      res.status(400).send('Value is missing')
+    }
+
     const itemTtl = ttl || defaultTtl
     const expiresAt = moment().add(itemTtl, 'seconds').toDate()
     await this.createItem(key, value, expiresAt)
@@ -31,6 +39,11 @@ export default class ItemController {
 
   public async getItem (req: Request, res: Response): Promise<void> {
     const { key } = req.query
+
+    if (!key) {
+      res.status(400).send('Key is missing')
+    }
+
     const item = await ItemModel.findOne({ key }).exec()
 
     const now = new Date()
@@ -73,6 +86,10 @@ export default class ItemController {
 
   public async deleteItem (req: Request, res: Response) {
     const { key } = req.query
+
+    if (!key) {
+      res.status(400).send('Key is missing')
+    }
 
     const result = await ItemModel.deleteOne({ key }).exec()
 

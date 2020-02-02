@@ -23,6 +23,7 @@ const start = async () => {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     useFindAndModify: false,
+    useCreateIndex: true,
     dbName: config.get('mongo.dbName')
   })
 
