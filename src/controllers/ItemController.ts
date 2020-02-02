@@ -19,22 +19,30 @@ export default class ItemController {
 
     if (!key) {
       res.status(400).send('Key is missing')
+      return
     }
 
     if (!value) {
       res.status(400).send('Value is missing')
+      return
     }
 
-    const itemTtl = ttl || defaultTtl
+    const itemTtl = Number(ttl) || defaultTtl
     const expiresAt = moment().add(itemTtl, 'seconds').toDate()
-    await this.createItem(key, value, expiresAt)
+    const newItem = await this.createItem(key, value, expiresAt)
 
-    res.sendStatus(200)
+    res.status(200).send(newItem)
   }
 
   public async getAllItems(req: Request, res: Response): Promise<void> {
     const items = await ItemModel.find({ expiresAt: { $gte: new Date() }}).exec()
-    res.send(items)
+    res.send(items.map(item => {
+      return {
+        key: item.key,
+        value: item.value,
+        expiresAt: item.expiresAt
+      }
+    }))
   }
 
   public async getItem (req: Request, res: Response): Promise<void> {
@@ -42,6 +50,7 @@ export default class ItemController {
 
     if (!key) {
       res.status(400).send('Key is missing')
+      return
     }
 
     const item = await ItemModel.findOne({ key }).exec()
@@ -89,6 +98,7 @@ export default class ItemController {
 
     if (!key) {
       res.status(400).send('Key is missing')
+      return
     }
 
     const result = await ItemModel.deleteOne({ key }).exec()
@@ -106,25 +116,22 @@ export default class ItemController {
     res.sendStatus(200)
   }
 
-  private async createItem (key: string, value: string, expiresAt: Date): Promise<void> {
+  private async createItem (key: string, value: string, expiresAt: Date): Promise<Item> {
     const allItems = await ItemModel.find({}).sort({ expiresAt: 'asc' }).exec()
+    const newItem: Item = {
+      key,
+      value,
+      expiresAt
+    }
 
     // when limit is reached, item with oldest expiration is updated
     if (allItems.length === maxItems) {
-      await ItemModel.updateOne({ _id: allItems[0]._id }, {
-        key,
-        value,
-        expiresAt
-      })
+      await ItemModel.updateOne({ _id: allItems[0]._id }, newItem)
       return
     }
 
     try {
-      await ItemModel.create({
-        key,
-        value,
-        expiresAt
-      })
+      await ItemModel.create(newItem)
     } catch (err) {
       if (err.code === mongoErrorCodes.duplicateKey) {
         console.log('item already exists, going to update')
@@ -134,5 +141,7 @@ export default class ItemController {
         })
       }
     }
+
+    return newItem
   }
 }
