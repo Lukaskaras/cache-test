@@ -1,6 +1,6 @@
 import * as assert from 'assert'
 import { ItemModel } from '../../src/entities/Item'
-import { getAllKeys, postKey, resetDatabase } from '../utils'
+import { getAllKeys, getKey, postKey, resetDatabase } from '../utils'
 
 describe('Integration tests', async () => {
   beforeEach(async () => {
@@ -38,6 +38,24 @@ describe('Integration tests', async () => {
       assert.strictEqual(allKeys.length, 2)
       assert.ok([ 'User', 'Key' ].includes(allKeys[0].key))
       assert.ok([ 'User', 'Key' ].includes(allKeys[1].key))
+    })
+  })
+
+  describe('GET /item', async () => {
+    it('should return item when exists', async () => {
+      await postKey('User', 'John')
+      const result = await getKey('User')
+      assert.strictEqual(result.value, 'John')
+    })
+
+    it('should return random string (and save it) if key does not exist', async () => {
+      const result = await getKey('User')
+      assert.strictEqual(result.value.length, 12)
+
+      const allItems = await ItemModel.find({}).exec()
+      assert.strictEqual(allItems.length, 1)
+      assert.strictEqual(allItems[0].key, 'User')
+      assert.strictEqual(allItems[0].value.length, 12)
     })
   })
 })

@@ -24,3 +24,14 @@ export const getAllKeys = async (): Promise<Item[]> => {
   const result = await axios.get(`${url}/items`)
   return result.data
 }
+
+export const getKey = async (key: string): Promise<Item> => {
+  const result = await axios.request({
+    method: 'GET',
+    url: `${url}/item`,
+    params: {
+      key
+    }
+  })
+  return result.data
+}

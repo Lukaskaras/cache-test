@@ -9,9 +9,6 @@ export default class Item {
 
   @prop()
   expiresAt: Date
-
-  @prop()
-  ttl: number
 }
 
 export const ItemModel = getModelForClass(Item)
